@@ -167,10 +167,12 @@ public class ImageLayout {
         return im2;
     }
 
+    // Zoom modifier added
     public BufferedImage renderToImage(long code) {
+        int ZOOM_MOD = 50;
         int[][] imageData = renderToArray(code);
 
-        BufferedImage im = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage im = new BufferedImage(size * ZOOM_MOD, size * ZOOM_MOD, BufferedImage.TYPE_INT_ARGB);
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 int value;
@@ -187,7 +189,12 @@ public class ImageLayout {
                     default:
                         throw new RuntimeException("Unknown image pixel color.");
                 }
-                im.setRGB(x, y, value);
+
+                for (int x1 = 0; x1 < ZOOM_MOD; x1++) {
+                    for (int y1 = 0; y1 < ZOOM_MOD; y1++) {
+                        im.setRGB(x * ZOOM_MOD + x1, y * ZOOM_MOD + y1, value);
+                    }
+                }
             }
         }
         return im;
